@@ -1,0 +1,213 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Backend Candidate Challenge",
+		"_postman_id": "46bd2b3c-7628-518f-cc83-44dde7561386",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "{{baseUrl}}/api/quizzes",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "{{baseUrl}}/api/quizzes",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Hei, ny quiz\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "{{baseUrl}}/api/quizzes/{{quizId}}",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes/{{quizId}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "{{baseUrl}}/api/quizzes/{{quizId}}",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes/{{quizId}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Hei, ny tittel\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "{{baseUrl}}/api/quizzes/{{quizId}}",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes/{{quizId}}",
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "{{baseUrl}}/api/quizzes/{{quizId}}/questions",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes/{{quizId}}/questions",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"Hei, nytt spørsmål\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "{{baseUrl}}/api/quizzes/{{quizId}}/questions/{{questionId}}",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes/{{quizId}}/questions/{{questionId}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"Hei, oppdatert spørsmål\",\n\t\"correctAnswerId\": 1\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "{{baseUrl}}/api/quizzes/{{quizId}}/questions/{{questionId}}",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes/{{quizId}}/questions/{{questionId}}",
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "{{baseUrl}}/api/quizzes/{{quizId}}/questions/{{questionId}}/answers",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes/{{quizId}}/questions/{{questionId}}/answers",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"Hei, nytt svar\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "{{baseUrl}}/api/quizzes/{{quizId}}/questions/{{questionId}}/answers/{{answerId}}",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes/{{quizId}}/questions/{{questionId}}/answers/{{answerId}}",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"Hei, oppdatert svar\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "{{baseUrl}}/api/quizzes/{{quizId}}/questions/{{questionId}}/answers/{{answerId}}",
+			"request": {
+				"url": "{{baseUrl}}/api/quizzes/{{quizId}}/questions/{{questionId}}/answers/{{answerId}}",
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
