@@ -2,12 +2,15 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using QuizService.Model.AutoMapper;
+using QuizService.Services.ServiceCollection;
 
 namespace QuizService
 {
@@ -23,6 +26,11 @@ namespace QuizService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // TODO (DKA): Read connection string from config.
+            services.AddDatabaseClasses("Data Source=:memory:");
+            
+            services.AddAutoMapper(typeof(QuizServiceProfile));
+            
             services.AddMvc();
             services.AddSingleton(InitializeDb());
         }
@@ -35,6 +43,11 @@ namespace QuizService
                 app.UseDeveloperExceptionPage();
             }
             app.UseRouting();
+            
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
 
         private IDbConnection InitializeDb()

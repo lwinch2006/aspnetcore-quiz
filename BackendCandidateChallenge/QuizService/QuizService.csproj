@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Dapper" Version="2.0.30" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.0" />
@@ -16,6 +17,10 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Migrations\*.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuizService.Common\QuizService.Common.csproj" />
   </ItemGroup>
 
 </Project>

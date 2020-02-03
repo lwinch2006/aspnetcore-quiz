@@ -18,7 +18,7 @@ namespace QuizService.Model
             public int CorrectAnswerId { get; set; }
         }
 
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public IEnumerable<QuestionItem> Questions { get; set; }
         public IDictionary<string, string> Links { get; set; }

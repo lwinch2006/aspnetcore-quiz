@@ -1,4 +1,4 @@
-namespace QuizService.Model.Domain
+namespace QuizService.Common.Models
 {
     public class Answer
     {

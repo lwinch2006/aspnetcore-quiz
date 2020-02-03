@@ -1,37 +1,53 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using System.Data;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using QuizService.Model;
-using QuizService.Model.Domain;
 using System.Linq;
+using AutoMapper;
+using QuizService.Common.Logic;
+using QuizService.Common.Models;
 
 namespace QuizService.Controllers
 {
+    // TODO (DKA):
+    // As further refactoring of this (and other classies) I would:
+    // - move all data access functionality to respective classes in Common.Repositories
+    // - move all business logic functionality to respective classes in Common.Logic
+    // - move all data models (business objects) to Common.Models.
+    // - rename Model folder in QuizService to Contracts as:
+    //   - API operates with Contracts
+    //   - WebApp operates with ViewModels
+    // - create separate solution folder for tests to gather them in one folder, dont blend with other projects
+    // - clarify test names by UnitTest, IntegrationTests, SystemTests, etc. Not just Tests. 
+
+    // - To learn more about my architecture meanings please see
+    // https://github.com/lwinch2006/basic-aspnetcore-app
+    
     [Route("api/quizzes")]
     public class QuizController : Controller
     {
         private readonly IDbConnection _connection;
 
-        public QuizController(IDbConnection connection)
+        private readonly QuizLogic _quizLogic;
+
+        private readonly IMapper _mapper;
+
+        public QuizController(IDbConnection connection, QuizLogic quizLogic, IMapper mapper)
         {
             _connection = connection;
+            _quizLogic = quizLogic;
+            _mapper = mapper;
         }
 
         // GET api/quizzes
         [HttpGet]
-        public IEnumerable<QuizResponseModel> Get()
+        public async Task<IActionResult> Get()
         {
-            const string sql = "SELECT * FROM Quiz;";
-            var quizzes = _connection.Query<Quiz>(sql);
-            return quizzes.Select(quiz =>
-                new QuizResponseModel
-                {
-                    Id = quiz.Id,
-                    Title = quiz.Title
-                });
+            var quizzesBO = await _quizLogic.GetAll();
+            var quizzesContract = _mapper.Map<IEnumerable<QuizResponseModel>>(quizzesBO);
+            return Ok(quizzesContract);
         }
 
         // GET api/quizzes/5
@@ -39,7 +55,7 @@ namespace QuizService.Controllers
         public object Get(int id)
         {
             const string quizSql = "SELECT * FROM Quiz WHERE Id = @Id;";
-            var quiz = _connection.QuerySingle<Quiz>(quizSql, new {Id = id});
+            var quiz = _connection.QuerySingleOrDefault<Quiz>(quizSql, new {Id = id});
             if (quiz == null)
                 return NotFound();
             const string questionsSql = "SELECT * FROM Question WHERE QuizId = @QuizId;";
@@ -97,6 +113,44 @@ namespace QuizService.Controllers
             return NoContent();
         }
 
+        [HttpPost("{id}/check")]
+        public IActionResult CheckQuiz(int id, [FromBody] QuizCheckRequestModel questionsWithAnswers)
+        {
+            var numberOfCorrectAnswers = 0;
+
+            if (questionsWithAnswers == null ||
+                questionsWithAnswers.QuestionsWithAnswers == null ||
+                !questionsWithAnswers.QuestionsWithAnswers.Any())
+            {
+                return BadRequest();
+            }
+            
+            const string query = "SELECT * FROM Question WHERE QuizId = @Id;";
+            
+            var questions = _connection.Query<Question>(query, new {Id = id});
+            if (questions == null)
+            {
+                return NotFound();
+            }
+
+            var totalNumberOfAnswers = questions.Count();
+            
+            foreach (var questionWithAnswer in questionsWithAnswers.QuestionsWithAnswers)
+            {
+                if (questions.Any(question => question.Id == questionWithAnswer.QuestionId
+                                              && question.CorrectAnswerId == questionWithAnswer.AnswerId))
+                {
+                    numberOfCorrectAnswers++;
+                }
+            }
+            
+            return Ok(new QuizCheckResponseModel
+            {
+                NumberOfCorrectAnswers = numberOfCorrectAnswers,
+                TotalNumberOfAnswers = totalNumberOfAnswers
+            });
+        }
+        
         // DELETE api/quizzes/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
@@ -113,6 +167,11 @@ namespace QuizService.Controllers
         [Route("{id}/questions")]
         public IActionResult PostQuestion(int id, [FromBody]QuestionCreateModel value)
         {
+            const string quizSql = "SELECT * FROM Quiz WHERE Id = @Id;";
+            var quiz = _connection.QuerySingleOrDefault<Quiz>(quizSql, new {Id = id});
+            if (quiz == null)
+                return NotFound();
+            
             const string sql = "INSERT INTO Question (Text, QuizId) VALUES(@Text, @QuizId); SELECT LAST_INSERT_ROWID();";
             var questionId = _connection.ExecuteScalar(sql, new {Text = value.Text, QuizId = id});
             return Created($"/api/quizzes/{id}/questions/{questionId}", null);
@@ -169,5 +228,13 @@ namespace QuizService.Controllers
             _connection.ExecuteScalar(sql, new {AnswerId = aid});
             return NoContent();
         }
+        
+        
+        
+        
+        
+        
+        
+        
     }
 }
